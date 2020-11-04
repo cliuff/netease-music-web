@@ -13,46 +13,22 @@
       </div>
 
       <v-container class="mx-3">
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">发现音乐</span>
         </v-btn>
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">我的音乐</span>
         </v-btn>
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">朋友</span>
         </v-btn>
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">商城</span>
         </v-btn>
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">音乐人</span>
         </v-btn>
-        <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-        >
+        <v-btn text>
           <span class="grey--text darken-1">下载客户端</span>
         </v-btn>
       </v-container>
@@ -68,19 +44,12 @@
 
       <template v-slot:extension>
         <v-tabs v-model="tab" align-with-title>
-          <v-tabs-slider color="yellow"></v-tabs-slider>
+          <v-tabs-slider color="red darken-3"></v-tabs-slider>
 
-          <v-tab v-for="item in subNav" :key="item.link">
+          <v-tab v-for="item in subNav" :key="item.link" @click="nav(item)">
             {{ item.name }}
           </v-tab>
         </v-tabs>
-        <v-tabs-items v-model="tab">
-          <v-tab-item v-for="item in items" :key="item">
-            <v-card color="basil" flat>
-              <v-card-text>{{ text }}</v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
       </template>
     </v-app-bar>
 
@@ -111,11 +80,10 @@ export default {
   },
   methods: {
     getSubNav: function() {
-      let context = this;
-      context.subNav = [
+      this.subNav = [
         {
           name: "推荐",
-          link: ""
+          link: "/"
         },
         {
           name: "排行榜",
@@ -123,7 +91,7 @@ export default {
         },
         {
           name: "歌单",
-          link: ""
+          link: "/playlists"
         },
         {
           name: "主播电台",
@@ -141,6 +109,9 @@ export default {
     },
     doLoginAction: function() {
       this.showLogin = true;
+    },
+    nav: function(navItem) {
+      this.$router.push(navItem.link);
     }
   }
 };

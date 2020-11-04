@@ -68,18 +68,17 @@ export default {
     };
   },
   created() {
-    this.getTrendingPlaylists();
     this.getCarousels();
+    this.getTrendingPlaylists();
   },
   methods: {
     getCarousels: function() {
-      let context = this;
-      context.axios
+      this.axios
         .get("/playlist/lunbo/")
         .then(response => {
           let re = response.data;
           if (re.code === "200") {
-            context.slides = linkRes(re.data);
+            this.slides = linkRes(re.data);
           }
         })
         .catch(error => {
@@ -87,13 +86,12 @@ export default {
         });
     },
     getTrendingPlaylists: function() {
-      let context = this;
-      context.axios
+      this.axios
         .get("/playlist/")
         .then(response => {
           let re = response.data;
           if (re.code === "200") {
-            context.trendingPlaylists = linkRes(re.data, "cover");
+            this.trendingPlaylists = linkRes(re.data, "cover");
           }
         })
         .catch(error => {

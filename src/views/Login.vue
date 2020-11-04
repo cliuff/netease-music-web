@@ -60,29 +60,28 @@ export default {
       this.$emit("input", false);
     },
     login: function(userName, pwd) {
-      let context = this;
       let data = {
         userId: userName,
         password: pwd
       };
-      context.axios
+      this.axios
         .post("/user/", stringify(data))
         .then(response => {
           let re = response.data;
           if (re.code === "200") {
-            context.closeDialog();
+            this.closeDialog();
           } else if (re.code === "000407") {
-            context.message = re.msg;
-            context.showMessage = true;
+            this.message = re.msg;
+            this.showMessage = true;
           } else {
-            context.message = "失败";
-            context.showMessage = true;
+            this.message = "失败";
+            this.showMessage = true;
           }
         })
         .catch(error => {
           console.log(error);
-          context.message = "失败";
-          context.showMessage = true;
+          this.message = "失败";
+          this.showMessage = true;
         });
     }
   }
