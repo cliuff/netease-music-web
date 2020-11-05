@@ -2,7 +2,7 @@
   <div>
     <v-carousel
       cycle
-      height="300"
+      height="285"
       hide-delimiter-background
       show-arrows-on-hover
     >
@@ -10,40 +10,45 @@
         <v-sheet :color="colors[i]" height="100%">
           <v-row class="fill-height" align="center" justify="center">
             <div class="display-3">
-              <v-img :src="slide" />
+              <v-img :src="slide" height="285" contain />
             </div>
           </v-row>
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
 
-    <v-container class="px-md-16">
-      <div class="px-4 py-2 mt-4">
-        <span class="text-h6 font-weight-medium">热门推荐</span>
-      </div>
-      <v-divider inset="true"></v-divider>
-      <v-row>
-        <div
-          v-for="(playlist, i) in trendingPlaylists"
-          :key="'tr_pl_' + i"
-          style="max-width: 150px"
-          class="mx-2 mt-4"
-        >
-          <div>
-            <v-img
-              :src="playlist.cover"
-              :alt="playlist.playlistName"
-              max-width="150px"
-            />
-            <div></div>
-            <a :title="playlist.playlistName"></a>
+    <v-container class="px-md-16 py-0">
+      <v-row style="background-color: white">
+        <v-divider vertical></v-divider>
+        <v-col class="py-4">
+          <div class="px-4 py-2">
+            <span class="text-h6 font-weight-medium">热门推荐</span>
           </div>
-          <p class="playlist-item-desc">
-            <a :title="playlist.playlistName">
-              {{ playlist.playlistName }}
-            </a>
-          </p>
-        </div>
+          <v-divider></v-divider>
+          <v-row class="ma-0 px-3">
+            <div
+              v-for="(playlist, i) in trendingPlaylists"
+              :key="'tr_pl_' + i"
+              style="max-width: 162px; cursor: pointer"
+              class="mx-2 mt-4 px-3"
+              @click="showPlaylist(playlist.playlistId)"
+            >
+              <v-img
+                :src="playlist.cover"
+                :alt="playlist.playlistName"
+                max-width="150px"
+              />
+              <span
+                :title="playlist.playlistName"
+                style="font-size: smaller"
+                class="black--text lighten-5 mt-4"
+              >
+                {{ playlist.playlistName }}
+              </span>
+            </div>
+          </v-row>
+        </v-col>
+        <v-divider vertical></v-divider>
       </v-row>
     </v-container>
   </div>
@@ -56,13 +61,7 @@ export default {
   name: "Recommended",
   data: function() {
     return {
-      colors: [
-        "indigo",
-        "warning",
-        "pink darken-2",
-        "red lighten-1",
-        "deep-purple accent-4"
-      ],
+      colors: [],
       slides: [],
       trendingPlaylists: []
     };
@@ -78,7 +77,13 @@ export default {
         .then(response => {
           let re = response.data;
           if (re.code === "200") {
-            this.slides = linkRes(re.data);
+            let resultData = linkRes(re.data, "image");
+            this.slides = resultData.map(function(carousel) {
+              return carousel.image;
+            });
+            this.colors = resultData.map(function(carousel) {
+              return carousel.color;
+            });
           }
         })
         .catch(error => {
@@ -97,21 +102,10 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    showPlaylist: function(playlistId) {
+      this.$router.push("/playlist/" + playlistId);
     }
   }
 };
 </script>
-
-<style lang="less" scoped>
-.playlist-item-desc {
-  color: #333;
-  font-family: Arial, Helvetica, sans-serif;
-  word-break: break-word;
-  list-style: none;
-  line-height: 1.4;
-  padding: 0;
-  width: 100%;
-  margin: 8px 0 3px;
-  font-size: 14px;
-}
-</style>

@@ -13,6 +13,16 @@ const routes = [
     path: "/playlists",
     name: "Playlists",
     component: () => import("@/views/explore/Playlists.vue")
+  },
+  {
+    path: "/my-collection",
+    name: "MyCollection",
+    component: () => import("@/views/me/MyCollection.vue")
+  },
+  {
+    path: "/playlist/:id",
+    name: "PlaylistPage",
+    component: () => import("@/views/explore/PlaylistPage.vue")
   }
 ];
 

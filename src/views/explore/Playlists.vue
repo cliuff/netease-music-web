@@ -1,46 +1,56 @@
 <template>
   <div>
-    <v-container class="px-md-16">
-      <div class="px-4 py-2 mt-4">
-        <v-btn text @click="selGenre = null">
-          <span class="grey--text darken-1 text-h6 font-weight-medium">
-            全部
-          </span>
-        </v-btn>
-        <v-btn
-          text
-          v-for="genre in genres"
-          :key="genre"
-          @click="selGenre = genre"
-        >
-          <span class="grey--text darken-1 text-h6 font-weight-medium">
-            {{ genre }}
-          </span>
-        </v-btn>
-      </div>
-      <v-divider inset="true"></v-divider>
-      <v-row>
-        <div
-          v-for="(playlist, i) in playlists"
-          :key="'tr_pl_' + i"
-          style="max-width: 150px"
-          class="mx-2 mt-4"
-        >
-          <div>
-            <v-img
-              :src="playlist.cover"
-              :alt="playlist.playlistName"
-              max-width="150px"
-            />
-            <div></div>
-            <a :title="playlist.playlistName"></a>
+    <v-container class="px-md-16 py-0">
+      <v-row style="background-color: white">
+        <v-divider vertical></v-divider>
+        <v-col class="py-4">
+          <div class="px-4 py-2">
+            <v-btn text @click="selGenre = null">
+              <span class="grey--text darken-1 text-h6 font-weight-medium">
+                全部
+              </span>
+            </v-btn>
+            <v-btn
+              text
+              v-for="genre in genres"
+              :key="genre"
+              @click="selGenre = genre"
+            >
+              <span class="grey--text darken-1 text-h6 font-weight-medium">
+                {{ genre }}
+              </span>
+            </v-btn>
           </div>
-          <p class="playlist-item-desc">
-            <a :title="playlist.playlistName">
-              {{ playlist.playlistName }}
-            </a>
-          </p>
-        </div>
+          <v-divider></v-divider>
+          <v-row class="ma-0 px-3">
+            <div
+              v-for="(playlist, i) in playlists"
+              :key="'tr_pl_' + i"
+              style="max-width: 162px; cursor: pointer"
+              class="mx-2 mt-4 px-3"
+              @click="showPlaylist(playlist.playlistId)"
+            >
+              <v-img
+                :src="playlist.cover"
+                :alt="playlist.playlistName"
+                max-width="150px"
+              />
+              <span
+                :title="playlist.playlistName"
+                style="font-size: smaller"
+                class="black--text lighten-5 mt-4"
+              >
+                {{ playlist.playlistName }}
+              </span>
+            </div>
+          </v-row>
+          <v-pagination
+            v-model="pageNum"
+            :length="pageCount"
+            circle
+          ></v-pagination>
+        </v-col>
+        <v-divider vertical></v-divider>
       </v-row>
     </v-container>
   </div>
@@ -56,7 +66,9 @@ export default {
     return {
       genres: [],
       selGenre: null,
-      playlists: []
+      playlists: [],
+      pageNum: 1,
+      pageCount: 0
     };
   },
   created() {
@@ -85,9 +97,10 @@ export default {
     getPlaylists: function(genre = null) {
       let isByGenre = genre != null;
       let url = isByGenre ? "/playlist/playlistByGenre/" : "/playlist/play/";
+      let limit = 35;
       let data = {
-        page: 0,
-        limit: 35
+        page: this.pageNum - 1,
+        limit: limit
       };
       if (isByGenre) data.genre = this.selGenre;
       this.axios
@@ -96,11 +109,18 @@ export default {
           let re = response.data;
           if (re.code === "200") {
             this.playlists = linkRes(re.data, "cover");
+            let remainder = this.playlists.length % limit;
+            let offset = remainder !== 0 ? 1 : 0;
+            this.pageCount =
+              (this.playlists.length - remainder) / limit + offset;
           }
         })
         .catch(error => {
           console.log(error);
         });
+    },
+    showPlaylist: function(playlistId) {
+      this.$router.push("/playlist/" + playlistId);
     }
   }
 };
