@@ -43,6 +43,7 @@
 
 <script>
 import { stringify } from "@/scripts/http-utils";
+import { signIn } from "@/scripts/login-utils";
 
 export default {
   name: "Login",
@@ -69,6 +70,7 @@ export default {
         .then(response => {
           let re = response.data;
           if (re.code === "200") {
+            signIn(this, userName);
             this.closeDialog();
           } else if (re.code === "000407") {
             this.message = re.msg;
