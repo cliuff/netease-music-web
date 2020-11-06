@@ -21,6 +21,7 @@
         <v-text-field
           v-model="password"
           key="password"
+          type="password"
           filled
           label="密码"
           class="mt-3"
