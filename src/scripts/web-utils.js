@@ -1,6 +1,9 @@
 export function linkRes(resList, attrName = null) {
   let isString = attrName == null;
-  let server = "http://123.56.247.98:5176/";
+  let isProduction = false;
+  let productionUrl = "http://123.56.247.98:5176/";
+  let developmentUrl = "http://localhost:5176/";
+  let server = isProduction ? productionUrl : developmentUrl;
   if (isString) {
     return resList.map(function(res) {
       return server + res;

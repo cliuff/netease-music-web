@@ -8,8 +8,13 @@ import axios from "axios";
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
+let isProduction = false;
+let productionUrl = "http://123.56.247.98:5176";
+let developmentUrl = "http://localhost:5176";
 let config = {
-  baseURL: "http://123.56.247.98:5176" || "http://localhost:5176"
+  baseURL: isProduction
+    ? productionUrl || developmentUrl
+    : developmentUrl || productionUrl
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
